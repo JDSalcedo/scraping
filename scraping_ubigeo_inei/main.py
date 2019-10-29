@@ -33,22 +33,21 @@ def main():
         prov = tree.xpath('/html/body/table[2]/tbody/tr[%s]/td[%s]/text()' % (tr, 3))
         dist = tree.xpath('/html/body/table[2]/tbody/tr[%s]/td[%s]/text()' % (tr, 4))
 
-        codes, names = get_value(depa).split(' ', 1)
-        codep, namep = get_value(prov).split(' ', 1)
-        coded, named = get_value(dist).split(' ', 1)
-
         if get_value(dist):
             td = 4
             # print('%s %s %s' % (get_value(depa), get_value(prov), get_value(dist)))
-            fd.write('<record id="l10n_pe_res_country_district_{}" model="l10n_pe.res.country.district"><field name="name">{}</field><field name="code">{}</field><field name="province_id" ref="l10n_pe_res_country_province_{}"/></record>\n'.format(coded, named, coded, codep))
+            coded, named = get_value(dist).split(' ', 1)
+            fd.write('\t<record id="l10n_pe_res_country_district_{}" model="l10n_pe.res.country.district"><field name="name">{}</field><field name="code">{}</field><field name="province_id" ref="l10n_pe_res_country_province_{}"/></record>\n'.format(coded, named, coded, codep))
         elif get_value(prov):
             td = 3
             # print('%s %s' % (get_value(depa), get_value(prov)))
-            fd.write('<record id="l10n_pe_res_country_province_{}" model="l10n_pe.res.country.province"><field name="name">{}</field><field name="code">{}</field><field name="state_id" ref="res_country_state_{}"/></record>\n'.format(codep, namep, codep, codes))
+            codep, namep = get_value(prov).split(' ', 1)
+            fp.write('\t<record id="l10n_pe_res_country_province_{}" model="l10n_pe.res.country.province"><field name="name">{}</field><field name="code">{}</field><field name="state_id" ref="res_country_state_{}"/></record>\n'.format(codep, namep, codep, codes))
         else:
             td = 2
             # print(get_value(depa))
-            fd.write('<record id="res_country_state_{}" model="res.country.state"><field name="name">{}</field><field name="code">{}</field><field name="country_id" ref="base.pe"/></record>\n'.format(codes, names, codes))
+            codes, names = get_value(depa).split(' ', 1)
+            fs.write('\t<record id="res_country_state_{}" model="res.country.state"><field name="name">{}</field><field name="code">{}</field><field name="country_id" ref="base.pe"/></record>\n'.format(codes, names, codes))
             values[codes] = names
 
         try:
